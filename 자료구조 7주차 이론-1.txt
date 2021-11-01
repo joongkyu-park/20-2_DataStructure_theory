@@ -1,0 +1,52 @@
+자료구조 7주차 이론-1
+
+p.6
+Linked Structure for Tree
+장점 : 직관적으로 트리모양을 상상하며 알고리즘을 동작시킬 수 있다
+단점 : 구현이 좀 복잡
+
+preorder traversal을 진행한다면?.. -> 스샷
+
+p.7
+Binary Trees.
+정말 많이 쓰고, 일반 트리보다 구현이 쉽다.
+자식노드가 최대 2개인 tree.
+(그중에 자식이 정확히 2개or0개인 트리는 proper binary trees)
+
+자식을 왼쪽 child, 오른쪽 child로 구분할 수 있다.
+
+singly linked list : 노드 1개 (next)
+doulby linked list : 노드 2개 (prev, next)
+binary tree : 노드 3개 (parent, left child, right child)
+
+재귀적으로 binary 정의
+- a tree consisting of a single node
+- a tree whose root has an ordered pair of children, each of which is a binary tree
+-> binary tree를 설명하데는 binary tree를 이용해서 설명 -> 스샷
+-> 이정의를 이용해서, external 노드를 항상 dummy node라고 할 때
+자식이 2개 있을 때 하나가 external 노드이면 dummy node이므로 실제 자식은 하나다. 이런 경우도 위의 정의를 이용해서 설명가능.
+
+p.8
+수식표현트리
+interanl nodes : operators(연산자)
+exteranl nodes : operands(피연산자)
+와 같은 규칙을 가질 때 수식을 표현할 수 있다.
+
+p.9
+decision tree
+internal nodes : 예/아니오를 위한 질문
+external node : decisions
+
+p.10
+properties of proper binary trees
+
+e = i + 1 인 이유 ??!
+
+n = e + i 이므로
+n = 2e - 1
+n = 2i + 1
+-> 전체의 절반정도가 external nodes이다... 
+internal nodes도 절반정도이다.
+
+h<=i 
+-> 노드들을 한쪽으로만 매달면 internal node의 개수가 height가 될 수 있다.

@@ -1,0 +1,181 @@
+자료구조 13주차 이론 -1
+
+지난시간
+
+...
+
+
+마지막 자료구조.
+Graphs.
+
+그래프의 스케셜케이스가 트리 이고 시퀀스이다.
+
+그래프를 구현할 수 있으면 사실 다 구현할수 있다는 것.
+
+그렇다고 뭐 특별히 어렵지 않다.
+
+p.2
+
+오브젝트가 2가지. (V, E). 둘다 집합
+
+V : vertex들의 집합 (vertices). 정점들의 집합.
+E : edge들의 집합 (edges). 간선들의 집합.
+
+노드와 노드사이의 링크(선)에도 데이터가 들어있는 형태인 것이다.
+
+그러니까 vertex를 node랑 같은 말이고, edge는 link또는 arc 등과 같은말이다.
+
+p.3
+Edge Types
+<표준그래프이론>
+1. Directed edge(유향간선)
+- 간선의 끝부분이 화살표로 되어있음
+- 순서가 있는 pair. 즉 (ORD, PVD) != (PVD, ORD)
+- (u,v)라고 할 때 u를 orign, v를 destination 이라고 부름
+
+-> Directed graph(유향그래프)
+- 모든 edge가 directed edge인 그래프
+
+
+2. Undirected edge(무향간선)
+- 간선에 화살표가 없고 그냥 선분
+- 순서가 없는 pair. (ORD, PVD) == (PVD, ORD)
+
+-> Undirected graph(무향그래프)
+- 모든 edge가 undirected edge인 그래프
+
+p.4
+응용
+
+보통 network에서 많이 사용.
+컴퓨터 네트워크도 많이사용하지만
+교통 네트워크에서도 많이사용
+
+p.5
+용어
+
+반드시 edge양쪽에는 정점이 있어야한다.
+
+Incident : 정점과 간선의 관계. 하나의 정점에 연결된(발생된) 간선들 사이의 관계를 incident라고 함.
+
+Adjacent : 정점과 정점의 관계. 두 정점이 하나의 간선으로 이루어져있을 때 인접(adjacent)이라고함.
+
+Degree : 어떠한 정점에 연결된 간선의 수.
+
+Parallel edges : 같은 정점 쌍들을 이어주는 같은 간선 -> 우리가 사용하는 그래프 이론에서는 이러한 개념은 없다.(표준그래프이론)
+
+self-loop : 출발과 도착이 자기자신인 루프 -> 역시 이러한 개념은 없다고 하다.
+
+p.5
+
+Path(경로)
+
+패스를 표현할때 edge들을 나열하기도 한다. 더 구체적으로 표현하고 싶을 땐 정점도 표현한다.
+ex) P1 = (b, h) = (V,b,h,Z) = (V,b,X,h,Z)
+
+시작과 끝은 vertex여야함.
+
+simple path
+: 같은 정점이 두번이상 나타나지 않는 패스.
+그림에서 P1은 심플패스, P2는 심플패스가 아님.
+
+p.7
+
+Cycle(사이클)
+
+출발점과 도착점이 동일하다. 패스의 일종.
+
+simple cycle : 출발점을 제외하고, 중복되는 정점 및 간선이 없을 때.
+
+p.8
+Properties
+
+이전 까진 입력이 하나였지만, 이젠 입력이 둘이다.
+정점개수를 n, 간선개수를 m. 
+
+deg(v) : 정점v의 degree
+
+프로퍼티 1, 2 확인하기.
+
+프로퍼티2에서 m = n(n-1)/2 일때 nC2 인거고, complete graph라고함
+(undirected)
+
+directed일때는 nP2 = n(n-1)
+
+p.9
+
+Graph ADT
+
+vetex와 edge의 연산이 따로 존재..
+
+incidentEdges(v) : v와 연결된 간선들을 return.
+u.isAdjacentTo(v) : u와 v가 인접해있다면 true.
+e.endVertcies() : 간선e에 연결된 양쪽 정점 return
+e.opposite(v) : 간선e의 한쪽 정점v의 반대쪽 정점 return
+
+...
+2시 20분~25분 이쯤 다시 듣기..
+...
+
+eraseVertex(v) : 정점 v가 삭제되면 v와 관련된 간선도 다 삭제해야하고 그 간선들과 연결된 정점들에 대해서 degree나 간선관련 정보도 다 업데이트해야함.
+
+p.10
+구현.
+그래프에서는 구현을 Representation이라고 말한다. (그래프 표현)
+두 가지가 있다.
+1. adjacency list structure
+2. adjacency matrix structure
+
+edge list structure은 두 가지 방법의 기반. 이걸로 표현하지는 않음.
+
+그래프를 표현하는 방법.
+
+vertex object
+vertex sequecne가 있고, 각각의 오브젝트는 본인들의 포지션과 데이터를 가진다.
+
+edge object
+edge sequence가 있고, 각각의 오브젝트는
+최소한 4개의 필드를 갖게된다.
+1. 본인들의 포지션
+2. 엘리먼트
+3,4. 출발점, 도착점 (vertex object)
+
+구현해야할 가장 기본적인 구조.
+그러나 이렇게 그래프를 구현했다고 하면, 대단히.. 불편하게 된다.
+edge에서 vertex로 갈 순 있지만, vertex에선 edge로 못간다.
+
+p.11
+따라서 이걸 기반으로 두가지 구현방법을 만들자.
+
+adjacency list structure
+adjacency matrix structure
+
+는 다음시간에.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

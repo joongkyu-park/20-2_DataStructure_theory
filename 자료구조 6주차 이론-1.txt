@@ -1,0 +1,108 @@
+자료구조 6주차 이론 -1
+
+복습.
+Vector ADT
+index를 가지고 임의의 위치를 access 가능한 타입.
+array로 구현하는것이 자연스럽다
+
+...
+
+List ADT
+doubly linked list로 구현하는 것이 자연스럽다
+
+...
+
+Sequence ADT
+vector와 list를 합쳐놓은 개념.
+list adt 기반이지만, index로 access할 수 있다는 점에서.
+sequential한 adt들은 다 sequence로 구현할 수있다.. (?)
+임의로 access할 수 있다는 점에서 끝만 access할 수 있는 큐나 스택보다 훨씬 강력하다.
+
+....
+
+
+-------------------------------------------------------------------------
+Trees
+
+p2.
+계층구조(hierarchical)를 갖는 어떤 상황이나 형태, 객체 등을 모델링할 때 쓰는 추상자료형.
+트리는 기본적으로 node라고 하는 객체를 기반으로 한다.
+-> 따라서 연결리스트처럼 구현하면 자연스럽다.
+
+트리에서 정말 중요한 관계.
+parent-child relation. (부모자식 관계)
+
+이용.
+이용하는 곳이 정-말 많다.
+조직도, 프로그래밍 환경, 파일시스템 ........
+
+p.3
+트리에는 용어가 많아 지루할 수 있다...
+배워보자.
+
+루트(root) : 가장 기본이 되는 노드, 부모(parent)가 없는 노드.
+내부노드(Internal node) : 자식이 1개이상 있는 노드. 끝이 아닌 노드.
+외부노드(External node) : 자식이 없는 노드. 끝 노드.
+마지막 노드라고해서 단말노드(terminal node), 잎(leaf)이라고 도 부른다.
+조상노드(Ancestors of a node): 부모, 조부, 증조부 노드 등등 본인을 제외하고 부모의 부모로 올라갈 때 root까지의 모든 노드들.
+책에 따라 자기자신도 조상노드로 포함시키는 경우도 있지만, 우린 아니다.
+그 때, 조상노드의 수를, 깊이 라고 한다.(Depth of a node)
+이 때 깊이의 최대값을 트리의 높이라고 한다. (Height of a tree)
+-> Depth라는 말이 나오면 노드, Height라는 말이 나오면 트리.
+자손노드(Descendant of a node) : 자식, 손자 등등 자신 밑에 있는 모든 노드들. 물론 여기서도 자기자신은 제외.
+Subtree : 자손들로 이루어진 모든 트리들의 조합.
+
+Q. 모든 leaf들은 depth가 같다 -> (X)
+
+Q. ppt 그림에서 F와 C는 조상-자손 관계인가? ->(X)
+A. 트리에서는 직계에 대해서만 조상-자손 관계라고 한다.
+F를 기준으로 C노드를 uncle node라고 한다. (여기선 3촌관계)
+
+p.4
+Tree ADT
+node를 access하기 위해 position의 개념을 사용한다.
+root() : root 노드의 포지션을 return
+positions() : position들의 list를 return하는 함수. 이거 호출하면 객체들의 주소값을 쭉 알려준다. 부모-자식 관계를 고려X, 관계 X.
+
+Q. data는 node에만 있어야한다? 그림상 선(link)에는 no data?
+A. 일반적으로 저 선은 그냥 이어져있다, link의 개념정도. data를 저장하는 객체로 저장하진 않는다.
+but 데이터를 저장하는 용도로 사용하는 경우도 있다.
+
+parent() : 특정 position을 주면 그 노드의 parent를 알려주는 함수.
+childern() : 특정 position을 주면 그 노드의 모든 자식들을 리스트형태로 리턴해줌.
+isRoot() : p라는 포지션이 루트포지션이면 true, 아니면 false
+isExteranl() : p라는 포지션이 External이면 true.
+
+이 외에도 구현방법이나 어플리케이션에 따라 여러 update method 들이 있을 수 있다.
+
+그렇다면,
+트리의 계층구조를 감안해서, 모든 포지션들을 알 수 있는 방법은 없을까? (위의 positions()는 계층구조를 고려하지않고 return하는 함수니까)
+지금까지 배운 sequential한 adt는 하나의 노드만 알면 쭉 따라가면서 모든 노드를 access할 수 있었다.
+하지만 tree는 data들을 어떤 rule에 의해 access할 방법이 있어야한다..! 선형이 아니기 때문에. ---> 알고리즘이 필요하다!!
+
+p.5
+알고리즘 시작.
+
+Preorder Traversal (전위순회)
+
+traversal은 트리의 노드들을 체계적으로 방문(visit)하는 알고리즘.
+(이제부터 visit이라는 표현을 처리(process)로 표현, 이해한다.
+왜냐하면 프로그래밍적으로 처리안되고 그냥 단어그대로 방문하는것은 여기서 말하는 visit의 의미가 아니므로)
+
+(전화, 녹화)
+
+차례만들기 (root에서 시작한다고 할 때)
+오른쪽 preOrder 알고리즘에서
+visit()을 print 출력하는 함수라고 가정해보자.
+
+
+
+
+
+
+
+
+]
+
+
+

@@ -1,0 +1,130 @@
+자료구조 6주차 이론-2
+
+지난시간 복습.
+
+계층구조형 자료구조 시작.
+첫 번째 Tree.
+
+Tree는 정말 많은 애플리케이션에 쓰인다.
+특히 hierarchical 구조를 갖는 곳에서. 조직도아 파일시스템 ...
+
+Tree에서 가장 중요한 relation이 'parent-child', 즉 부모-자식 관계이다.
+
+Tree ADT중에서 postion과 관련된 메소드가 가장 중요할 것이다.
+position root()
+list<position> positions()
+position parent()
+list<postion> children()
+
+Preorder Traversal
+Datas structure는 그 데이터 스터럭쳐 내에 모든 data를 access할 수 있는 방법이 있어야한다.
+이전의 선형데이터구조는 그냥 다음을 따라가면 되기 때문에 특별한 알고리즘이 필요없다.
+하지만 Tree는 Sequencial하게 생긴 구조가 아니므로 그럴 수 없다.
+Tree의 특성(모양)을 고려하면서 작업을 하는 방법이 필요하다 -> 체계적인 방법이 필요하다 -> 알고리즘이 필요하다.
+Tree의 특성을 고려하면서 모든 data를 한번씩 access하는 것을 'Travesal(순회)'라고 한다.
+
+그 첫번째, 전위순회(Preorder Traversal).
+
+여기서 나오는 visit을 단순히 방문,이라고 생각하지말고 처리(process)라고 생각하자. 그 앞에 서있는것 만으로 visit이 될 수 없고, 노크라도 뭐라도 해야함. 그렇게 한번씩 모든 노드를 처리하는것이 Traversal.
+
+직관적으로 루트노드(v)부터 시작하고, preOrder 알고리즘을 recursion으로 수행.
+
+1번노드 수행
+-> 1번의 자식들에게 반복문 수행, 2번, 5번, 9번 중 하나 수행 (여기선 편의상 2번으로)
+-> 2번에 대해 recursion으로 다시 수행
+-> 2번의 자식들에 반복문수행, 3번 수행
+-> 3번은 자식이 없으므로, 다음 반복문으로 2번의 두번째 자식인 4번
+->  ....
+
+p.6
+Postorder Traversal(후위 순회)
+: 내 자식들을 먼저 처리하고 그 다음에 나를 처리.
+
+응용예시) 폴더의 공간을 파악할 때.
+폴더 내의 하위 폴더, 또는 파일들의 용량을 모두 파악해야 최상의 폴더가 차지하는 공간을 파악할 수 있으므로.
+
+
+...
+
+다 넘어간후
+
+구현파트
+
+p.16
+링크드리스트로 구현해보자.
+node 구조체를 만들때, 멤버변수로 뭐가 필요한가.
+struct node{
+element data
+struct node* parent
+그리고 children...
+}
+=> children을 어떻게 표현할 것인가..?
+만약에 구조체안에 children1, children2 두개가 있다고하면
+모든 노드가 자식노드필드를 2개 갖고있어야하는 문제,,,
+
+해결법
+node형 포인터 array 사용.
+but 이건 구현의 문제고,
+=>어쨌든 children의 sequence node을 갖고 있게 하면 된다.
+
+//잠깐정리
+node의 구성.
+1. element
+2. parent node (없으면 NULL)
+3. sequence of children nodes. (없으면 NULL), 원소의 타입은 node형 포인터. 벡터가 되었든 리스트가 되었든 쭉 연결되어있으면 되겠다.
+
+위에서 adt(메서드들)을 배웠는데,
+insert operation을 만들어보자 (makeChild 같은)
+->구현방법에 따라 다르다.
+
+이런식으로 확장하면 된다.
+그런데 위에서 배운 operation들이,
+링크드리스트로 구현했을 때 구현시간이 얼마인가?
+
+size나 empty, root position -> O(1)
+positions() : 트리의 구조관계없이 O(n)
+parent position -> O1()
+children positions() -> child 하나당 O(1) -> child의 갯수를 c라하면 
+O(c) 타임.
+
+다른 구현방법이 있지만, 가장 general한 tree에 대한 기본적인 구현방법이다. linked structure을 이용해서.
+
+물론 tree 전체를 배열로 구현할 수 있다. 특정 조건을 만족할 때는 오히려 더 효율적일수도.
+
+하지만 tree는 position based로 되어있으니까 linked structure로 구현하는 것이 자연스럽다.
+
+가장 기본적이고 쉽게 생각하면 세번째필드를 node형 포인터 타입의 벡터로 구현하는 방법이 있다.
+그러면 스페이스도 줄이면서 (조금의낭비는있겠지만) children의 포지션들을 저장할 수 있겠다.
+
++) preorder traversal 구현시간은? (링크드리스트로 구현했을 때)
+
+Algorithm preOrder(v)
+	visit(v)  -> O(1)
+	for each child w of v   -> O(c)
+		preOrder(w)
+
+모든 노드를 한번씩 다 들르므로 O(1) x n번 (children의 갯수를 다합하면 모든 노드의 갯수 n이 나오니까)
+=> O(n)타임에 수행이된다. space도 O(n)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

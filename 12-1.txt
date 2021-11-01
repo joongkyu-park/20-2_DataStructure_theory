@@ -1,0 +1,212 @@
+자료구조 12주차 이론-1
+
+지난시간들
+
+PQ 구현방법에 따라 PQ sort 알고리즘의 성능이 달라진다.
+그중에 Heap을 이용한 PQ구현을 하면 O(nlog n)시간에 sorting할 수 있다.
+input의크기가 n개였을 때.
+만약에 입력이 배열로 주어지면, PQ sort의 1단계까 선형시간에 수행될 수있다.(by bottom up heap construction), 이것이 왜 최악시간에 O(n)이 되는지 엣지의 색깔을 가지고 해봤지만, 이해가 안가는 분도 있었을거고~ 다음에 논의해보자
+
+지난주에는
+BST(binary search tree)
+순서조건: 왼쪽서브트리는 자기보다 작은것들만, 오른쪽서브트리는 자기보다 큰것들만 있는 데이터 스트럭쳐.
+이 특성을 만족할때, 임의의 data의 key에 대해 탐색, 삽입, 연산 가능하고, O(h)에 가능했다.
+balanced binary search tree를 이용하면 O(log n)에 바운더리가 가능하고, 그중에 AVL 트리를 배웠다.
+따라서 탐색연산이 O(log n)에 수행되고, 삽입 삭제도 O(log n)에 수행했다.
+
+-------------------------------------------------------------------------
+
+Dictionaries ADT
+
+구현하는 방법이 여러가지가 있는데,
+그 중에 하나가 BST.
+
+p.3
+연산에 대한 명세, ADT
+
+dicitionary DT는 탐색할수있는 key-element entries를 다룬다.
+
+탐색 삽입 삭제 연산을 'key'를 가지고 한다.
+
+여러개의 아이템(엔트리)들이 같은 key를 가지는 것을 허용할 수 도 있고 안할 수 도있지만, 넓은 의미로 허용한다.
+
+applications:
+-진짜 사전(word-definition pairs) -> 이 때 key가 단어고, 실제 data는 발음이며 품사, 단어에 대한 내용 등이 된다. (key를 가지고 탐색하기 때문)
+-카드번호를 가지고 그 신용카드가 유효한지 등..
+-DNS mapping of host names(e.g., naver.com) to internet IP addtesses.(e.g., 128. ....... .101)      (IP주소와 인터넷 주소와의 매핑) -> 이때 host name이 key가 되고 , ip주고가 data가 되겠다.
+
+주의할점.
+key와 element의 pair로 되어있지만,
+그 key들을 어떤 식으로 저장할지는 구현하는 사람의 마음. (즉, 순서X)
+
+p.4
+find 연산 (탐색) : 키가 k인 entry를 찾아라, 없으면 special iterator인 end 리턴
+put 연산 (삽입)
+erase 연산 (삭제)
+
+p.5
+구현방법
+A List-Based Dictionary ?
+어떤 entry가 삽입 될때마다 그냥 순서에 관계없이 뒤에다가 갖다가 붙이기 때문에 list-based라고 표현. (log file이나 audit trail이라고도 부르지만, log ifle이란 말을 흔히 사용) -> 즉 unsorted sequence 이고 -> 그냥 뒤에 붙이면 되기 때문에 삽입이 빠르다.
+
+따라서 put은 O(1).
+
+그러나 find나 erase(찾아서 지우니까), O(n)이다.
+
+탐색, 삭제 연산이 자주 발생하지 않는 곳에 이용하면 효율적이겠다.
+(e.g., 시스템 log -> 시스템에 event가 계속 발생할때마다 log에 기록하는데, 삭제하거나 탐색하지는 않으니까..! 그래서 위에서 말했듯이 log file이라고 부른다.)
+
+p.5
+탐색, 삽입, 삭제 연산 알고리즘
+
+p.6
+Seach Table(=Lookup Table)
+search table은 정렬된 array이다. -> 바로 Binary Search 알고리즘을 떠올리자.
+array-based sequence에 저장한다. sorted된.
+
+-> find 연산이 이진탐색을 통해 O(log n)이다.
+그러나
+삽입,삭제 시 최악의경우 O(n).
+자리를 찾는데는 O(log n)이지만 자리를 만들거나 줄일때 O(n).
+
+-> search연산이 자주 일어나는 데에 자주 사용
+(e.g., credit card 승인, 도메인네임서비스 등)
+
+p.7
+Binary Search 알고리즘이란?
+index로 하는거.
+첫번째수행 : ( 첫번째인덱스 + 마지막인덱스 ) / 2 가 가리키는 인덱스를 탐색
+
+재귀적으로 수행.. (ppt 그림 참조)
+
+
+
+p.8
+
+Hash Tables
+Hashing이라고도 부른다.
+
+table이다? -> 기본적으로 array-based일 것~
+
+p.9
+hash는 2가지 구성요소로 되어있다.
+hash function, hash table
+
+1. hash table(hashing)
+hash function h와 array(size가 N)로 되어있다.
+
+2. hash function
+key를 어떤 주소값(index)로 변환해주는 함수.
+e.g., h(x) = x mod N  (x는 data의 key)
+
+hash의 목표는, 아이템(k,o)을 삽입할때 index를 골고루 흩어지도록 저장시키는것.
+
+p.10
+e.g.
+10000개의 칸에 각 사람들를 배분하려고한다.
+-> 이 때 규칙을 마지막 4자리 번호만 보고 그 인덱스에 배정하자.
+-> h(x) = x mod 10000 가 되겠다.
+
+p.11
+hash fucntion
+key값이 있으면, 이걸 index로 변경시켜주는 함수.
+
+방금까지는 key가 정수였다는 가정하에 mod 연산 등을 사용했는데,
+key가 이름일수도, 다른 타입일 수도 있다.
+
+그래서 hash function은 2가지 단계로 나뉜다.
+
+1.hash code
+h1 : keys -> integers
+
+2. compression funtion
+h2 : integers -> [0, N-1]
+
+즉 h(x) = h2(h1(x))
+
+hash function의 목적은 "disperse", 즉 잘 분산시키는것이 목적.
+왜?
+분산시키지않으면 여러가지 리소스를 잘 활용하기 위해. 일이 오래걸리지 않기 위해.
+
+p.12
+compression functions
+여러가지가 있지만, division을 자주 사용한다. (mod 연산)
+
+h2(y) = y mod N
+
+이 때 N을 소수(prim number)를 쓰면 잘 분산이 된다. (수학적으로..)
+
+mutiply, add and divide(MAD)
+h2(y) = (ay + b) mod N
+이 때 a mod N != 0 이 되게 해야한다. (a mod N = 0 이 되버리면 모든 값이 b가 되버린다.)
+자주 사용은 x
+
+p.13
+Collision Handling
+충돌을 피해야 좋은 hashing이 된다.
+
+Collision(충돌) : 두 개이상의 서로 다른 원소들의 해쉬값(해쉬함수값)이 동일한 값을 가질 때.
+
+ppt의 그림에서, 서로 다른 두 개의 key가 같은 곳으로 mapping(충돌)이 되었다!
+-> 이것을 어떻게 해결하느냐에 따라 해슁기법의 이름이 달라진다.
+
+1. Separate Chaining
+: 한 셀에 두개의 data가 들어갈 수 없으니까, 먼저 들어온 key를 저장해놓고, 나중에 들어온 data를 해당 인덱스에 linked list로 엮어준다.
+그래서 table은 linked list의 pointer를 보관하는 배열이 되어야한다. 
+즉, array안에 data를 보관하는것이아니고, 테이블 밖에 data를 저장하게 된다. 
+
+p.14
+Linear Probing 기법.
+
+Open addressing(개방주소법)
+: 아이템들이 충돌되었을 때, 그 배열의 셀에 어떻게 해서든 저장시키는 방법.
+hashing은 적절한 메모리 공간을 사용해야한다.
+예를 들어 100만개의 학번을 저장하려고 하는데, 1억 사이즈의 배열을 사용한다? -> 메모리 낭비가 심하다.
+
+open addressing 방법중 하나인 linear probing 기법.
+: 충돌이 생기면, 새로 들려가고하는 아이템을 바로 다음위치에(빈공간인) 아이템을 넣는다.
+
+e.g.
+해시함수 : h(x) = x mod 13
+insert keys : 18, 41, 22, 44, 59, 32, 31, 73
+18 -> index : 5
+41 -> index : 2
+22 -> index : 9
+44 -> index : 5 ->겹치므로 다음 칸에 -> 6, probe 횟수 2회
+59 -> index : 7
+32 -> index : 6 -> 겹치므로 다음칸 -> 또 겹치므로 다음칸 -> 9,
+
+이때 32와 44는 충돌이아니라, probe 횟수이다. (?...)
+
+31은 probe 6번만에 자기자리 (index : 10)
+...
+
+우리가 알아야할것
+
+linear probing 결과를 보자.
+아이템을 넣을수록 뭉치게 되서 probe 횟수가 늘어난다-> 성능이 나빠진다.
+linera probing같은 경우는 array size가 충분히 크지 않으면 이런일이 발생한다. 심플한 대신.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

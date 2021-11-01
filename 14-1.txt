@@ -1,0 +1,324 @@
+자료구조 14주차 이론-1
+
+지난시간.
+
+Graph 배움.
+
+두가지 방법.
+링크드스트럭쳐로 구현, 배열로 구현.
+
+두 정점을 주고 isAdjacebt했을때, 수행시간이 얼마나걸리고 왜 그런지 대답할 수 있어야.
+
+--------------------------------------
+
+p.1
+Depth-First Search (깊이 우선 탐색, DFS)
+
+알고리즘이다.
+
+p.2
+먼저 몇가지 용어를 배우자.
+
+Subgraph (부분그래프)
+
+원래그래프 G에 대한 서브그래프 S는 "그래프" 이어야한다.
+
+G=(V, E)라고 표현했는데,
+
+S=(V', E')이고, V'은 V의 부분집합, E'는 E의 부분집합이어야한다.
++ S는 그래프여야한다.
+
+예를들어 G에서 V를 몇개선택하고(V'), E를 몇개선택했을때(E') 부분집합 조건은 만족하나 항상 그래프인것은 아니기 때문에, S는 그래프이다 라는 조건이 중요.
+
+spanning subgraph라는 뜻은, 서브그래프 중에서 V=V'일때를 뜻한다. 즉 정점은 그대로 다 갔다쓴 경우.
+
+
+p.3
+connectivity, 연결성
+임의의 정점 a에서 임의의 정점 b로 갈수있는 path가 한개이상 존재한다면, 즉 연결되어있다면 그 그래프는 connected 되었다고 말한다. (모든 정점에 대해서)
+
+connected component (undirected 그래프에 대해서)
+그래프 G의 서브그래프 중에서, connected되어있는 최대(maximal) 그래프.
+정점들의 집합으로도 표현할 수 있다.
+
+스크린샷에서 connected component는 {v1, v2, v3} 와 {v4, v5} 이다.
+예를들여 {v1, v2}는 최대가아니기 때문에, 즉 v3를 추가하면 연결되어있는 간선이 또 있기때문에 maximal이 아니므로 connected component라고 할 수 없다.
+
+
+p.4
+그래프에서의 Tree.
+지금까지 봐왔던 트리랑은 정의가 좀다름.
+그래프 이론에서의 tree는 undirected graph이다.
+조건.
+- connected 되어있고
+- cycle이 없다. -> 모든 정점 사이의 패스가 하나이다. (사이클이 있으면 두개이상 존재함)
+(cycle : 그래프의 특정 정점에서 출발하여 돌아다니다가 다시 처음 출발했던 곳으로 되돌아 갈 수 있으면 사이클이 있다고 한다. )
+
+rooted tree(특정한 루트를 지정해줬을때) 또는 free tree라고 부른다.
+
+Forest.
+여러 트리가 모여 숲이 되듯, 여러 connected component가 모인것.
+
+역시 undirected그래프이고 cycle이 없다.
+
+그렇기때문에 forest의 connected component는 tree이다.
+
+
+p.5
+
+Spanning tree
+어떤 그래프의 spanning tree란,
+정점들을 다 포함하면서, 모든 정점들 사이에 path가 존재하면서 cycle이 없는 그래프(즉 트리). -> 즉 스패닝 서브그래프이면서 트리인 그래프를 spanning tree라고 부른다.
+
+하나의 그래프 안에 여러개 스패닝트리가 있을 수 있다. (유일하지x)
+
+다만, 원래 주어진 그래프가 tree였다 -> 스패닝 트리도 유일. 그 그래프 자체가 스패닝 트리가 됌.
+
+이용 : 통신망.
+그림과 같은 그래프가 존재할때, 정점과 정점을 연결하는데 cost가 든다고 가정.
+그러면 모든 정점들은 connected 되어있어야하는데, 최소비용으로 연결할 수있는 방법은? -> 즉 스패닝트리.
+ 
+spanning forest
+spanning subgraph중에서 그 그래프가 forest일때.
+
+
+p.6
+
+Depth-First Search.
+깊이우선탐색 알고리즘
+
+어떤 자료구조던지, 자료구조안에 있는 데이터들을 access하고 처리할 수 있는 방법이 있어야함. 접근할 수 없다면 없는거나 마찬가지.
+시퀀셜한 데이터면 다음셀, 다음노드 이런거랑 같이 특별한 알고리즘 없이 접근이가능했지만,
+트리부터는 그렇지 않았다. 순서라는 것이 딱히 없다. -> 체계적인 알고리즘이 필요.
+트리에서는 preorder traversal, postorder traversal 그리고 이진트리일때는 inorder traversal이 있었다.
+
+그래프에서도 위와같이 알고리즘이 필요하다.
+
+2개의 traversal 알고리즘이 존재한다.
+
+그중에 하나가 DFS
+
+graph를 traversal(순회)하는 general한 테크닉이다.
+
+DFS는 뭘하냐? 그 그래프 내에있는 모든 객체를 딱 한번씩 처리. (모든 정점과 간선들을 딱 한번씩 visit. visit이란 말을 곧 process 처리 개념)
+
+이것을 이용하면 그래프 G가 connected되어있는지, G의 connected component가 뭔지 알 수 있고 G의 spanning forest를 결정할 수 있다. (connected component라는 말은 undirected에서만 쓰임. directed에서는 조금더 강한 표현인 strongly connected component 라는 말을 쓴다.)
+
+
+p.7
+DFS 알고리즘
+
+모든 정점과 모든 간선들을 한번씩 처리.
+
+단 처리할때, 모든정점과 모든간선들을 그래프의 특성에 따라 처리한다.
+그래프의 모양을 감안해서 처리.
+그래프의 모양을 생각안할꺼면 vertax리스트가서 순서대로 처리하고 edge리스트가서 다 처리고 그러면 똑같이 다처리하는건데, 모양을 고려하지않았으므로 의미가 없다.
+
+트리에서 예를들면 preorder나 postorder가 아니라 그냥 노드리스트에 있는 노드들을 그냥 들어있는 순서대로 처리하기만 한다면, 이건 트리하고 전혀 관련없는 처리가 되듯이.
+관계를 알고 접근했을때, 예를들어 BST에서 inorder traversal를 하면 다음 노드가 successor임을 알 수 있듯이.
+
+여기서 말하는 처리(=visit=process)는 label이라고 한다. 또는 color. (이름붙이기, 색칠한다고 생각)
+
+인풋 그래프 G
+아웃풋 모든 버텍스와 엣지가 처리(labeling)된 상태인 G
+
+주의할점.
+vertax set안의 vertax object들은 -> unexplored라는 색으로 칠해진다 (초기화)
+이 vertax들이 dfs를 돌리고나면 -> 전부 visited로 바뀌게된다.
+
+edge set의 edge들도 초기에는 unexplored 상태.
+dfs 이후에는, 어떤애들은 discovery edge로 되고, 어떤애들은 back edge로 처리된다. (unexplored인 상태는 없다.)
+
+알고리즘
+
+DFS (G)
+1. 모든 vetax들을 unexplored로 초기화 -> O(n)
+2. 모든 edge들을 unexplored로 초기화 -> O(m)
+3. 모든 vertax에 대해서, 정점v가 unexplored인 정점이면 DFS(G,v) 호출
+
+그러면 DFS(G,v)는?
+
+DFS대표적인 예가 미로찾기.
+갈림길이 나올땐까진 가야한다.
+갈림길이 나오면 어느길로선택할것인지, 그리고 지나온길 표시하는것.
+
+맨처음 출발점 v에서 시작.
+v부터 와본길이니까 표시. 깃발꼽기.-> v.setLabel(VISITED)
+그다음, v와 연결된길(간선)은? -> G.incidentEdges(v)
+그 간선중 하나를 정해서 일단 갈수 있는데 까지 가보는것. 그래서 깊이우선. 계속파고들어감.
+하나의 간선을 선택해서, 그 간선이 안가본 길이라면(unexplored),
+반대편 정점은 가본 정점인가 확인.
+만약 깃발이 꼽혀있으면, 한바퀴를 돈게되니까, 그 정점으로는 가면안되고, 그 간선e에 가면안되는길이라고 표시(e.setLabel(BACK)).
+다른 간선 e에 대해, 다시 안가본길인지 확인하고 반대편 정점확인.
+깃발이꼽혀있지않다면, 간선 e에 지나온길이라고 표시(e.setLabel(discovery))라고 반대편 정점을 w라고한다면 w로가서, 다시 DFS(G,w)실시. -> w에 대해서 다시 재귀적으로 실시.
+w에 대해서 DFS(G,w)를 시작할때 역시 처음에 w에 깃발꼽고 시작...
+
+만약에 모든 edge에 대해 다 처리가 되었다면, return.
+( + unexplored edge는 dicovery edge로 바뀌거나 back edge로 바뀌는데, 한번 바뀌면 다른걸로 다시 바뀌지 않는다.)
+
+그렇게하다보면
+만약에 그 그래프가 connected 그래프가 아니라면,
+어디선가는 끊어지고, 정점이 모두 처리되지 않을거다.
+-> 즉 하나의 connected component가 처리된것.
+그러면 DFS(G,v)에서 return되어 다시 DFS(G)로 돌아왔을때, visited되지않은, 즉 unexplored인 정점에 대해해서 다시 DFS(G, x)가 수행되므로 결국 모든 정점에 대해서 실행된다.
+
+
+P.8
+예제를 보며 다시 알아보자
+
+이번 시간과 다음시간을 걸쳐 하나의 가정.
+원래 정점과 간선은 순서가 없다.
+하지만 학습의 편의를 위하여 정점에 A,B,C .. 를 부여하고 빠른 알파벳 순서로 방문한다고 가정한다.
+(원래는 임의의 정점이 선택되고, 그 정점에 연결된 간선들을 이동할때 또 임의의 간선이 선택되지만 편의상 반대편 정점을 보고 빠른 알파벳 순으로 방문한다고 가정)
+
+그림예시.
+A부터 시작하기로 약속.
+그러면 DFS(G,A)이니까 A에 깃발꼽고 시작.
+IncidentEdges(A). 알파벳 순서대로 보기로했으니까 AB간선 확인. -> 간선 방문x, 반대편 정점방문x이므로 B로 이동
+
+B로 와서 DFS(G,B)실행, B에 깃발꼽고 시작,
+IncidentEdges(B)를 하게되면, 알파벳이 빠른 순서대로 보기로 약속했으므로
+간선 BA부터 본다.
+이미 지나온길(dicovery)임으로 패스
+귿음 BC를 보고, unexplored이므로 정점 C로 가서 다시 DFS(G, C)하는 식.
+
+C.
+IncidentEdge(C)
+1. CA -> Back으로 칠해주고 pass
+2. CB -> 색칠된(discovery) edge이므로 pass
+3. CD -> edge를 discovery로 칠해준후 DFS(G, D) 호출
+
+D.
+DA -> 안칠해져있지만 A에 깃발 -> back으로 칠해주기
+DC - > 이미 칠해져있으므로 pass.
+더이상 간선이없으므로 D에서 return하여 C로 돌아감.
+
+C의 입장에선 incidentEdges를 하나씩 호출하고 있는 단계에 도착한것.
+그러면 C의 입장이니까 이제 다음 edge인 CE를 확인. unexplored이고 정점E도 unexplored이므로 이동.
+
+p.9
+DFS(G,E)
+E에 깃발꼽고,
+EA -> back으로 칠해
+EC -> pass
+
+E에서 return하여 C로감.
+C도 더이상 간선이없으니까 C를 호출한 B로이동.
+B도 더이상 간선이없으니까 A로 이동.
+A입장에서는 AB만 확인한셈이므로,
+AC를 확인 -> back이므로 패스
+AD, AE도 각각 확인하는데 back이므로 패스
+더이상 간선이없으므로 DFS(G,A)가 끝남. 거기서 return을 한게 DFS(G,A)를 호출했던 위치로 가는데, 그곳은 모든 버텍스에 대해서 unexplored임을 확인해라.였음
+A는 방문되었으니까 B,C,D,E 순서대로 확인하는데 다 방문되어있으므로(unexplored가 아님) 알고리즘 종료 -> 모든 정점에대해 처리를 할 수 있게 된다.	
+
+p.10
+이 DFS는, 미로에서 꺾이는 부분을 정점으로 만들어주고 복도를 간선이라고 하여 DFS를 수행하면 길을 찾을 수 있다. DFS에서 가장 유명한 문제.
+
+p.11
+DFS의 properties.
+
+특성1.
+DFS(G,v)를 하고나면, 모든 정점과 간선을 다 방문.
+단, v에서 시작했다면 v와 connected component인 애들만.
+
+특성2.
+이때 discovery edge만 모아놓으면, 그 edge들은 v의 connected component에 대한 spanning tree가 된다.
+	
+p.12
+복잡도.
+
+정점들과 간선들에 대해 label하는건 O(1)시간.
+
+모든 정점들과 간선들은 2번씩 색깔이 칠해짐
+1번은 unexplored
+1번은 정점이라면 visited, 간선이라면 discovery or back
+p.7로 돌아가서 수행시간을 헤아려보자 (스샷)
+
+그래프를 adjancecy list로 구현했을때 incidentEdges의 시간은 O(deg(v)).
+
+
+(이쪽 스샷보면서 다시공부, 필요하면 영상)
+ 
+
+p.6으로 돌아와서.
+DFS의 수행시간은 O(n+m)
+
+그래프가 connected component라면 두 정점사이의 길을 무조건 찾을 수 있다. (최단시간인지는 모르겠지만)
+또, back edge가 생기는 순간이 cycle이니까 cycle detection도 가능.
+
+dfs는 마치 이진트리의 오일러투어같음.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

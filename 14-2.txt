@@ -1,0 +1,178 @@
+자료구조 14주차 이론 - 24
+
+그래프의 traversal 알고리즘
+
+DFS, BFS 두가지가있는데 지난시간엔 DFS를 배웠다.
+
+p.3
+어떤 그래프가 connect라면 connected component는 자기자신 1개.
+
+Adjancey list structure로 구현했을때 dfs의 수행시간 O(n+m)의 선형시간이었다.
+--------------------------
+
+Breadth-Fisrt Search. 너비우선탐색.
+
+넓혀가는것이 BFS이고
+깊게 파고들어가는것이 DFS이다.
+
+p.2
+
+역시나 모든 정점과 간선을 visit한다.
+
+bfs를 이용하면, 그래프 G가 connected 되었는지 확인가능(DFS도 마찬가지)
+dfs든 bfs든 한번에 다 처리가 되면 connected인것.
+**connected라는 용어를 쓴것은 undirected인것.
+strongly라는 말이 붙으면 directed **
+
+재미있는 특성.
+두 개의 정점 사이에 path가 여러가지 있을 수 있는데, edge를 최소로 거칠수있는 길을 찾을수있다.
+예) 각 edge의 시간이 1시간
+두 정점사이의 최단시간이 걸리는 path는? 이런문제 구할수있다.
+==> 즉 bfs는 최단경로와 관련이있다.
+
+undirected일경우 simple cylce을 detect할수있다.(dfs도마찬가지였음)
+
+
+p.3
+
+BFS알고리즘.
+
+output에 labeling되었다는 뜻은 역시나 visit,또는 process되었다는 뜻.
+
+모든 정점과 간선을 unexplored로 초기화.
+
+정점전체로 for문.
+정점이 unexplored이면, BFS(G,v)실행.
+
+빈 시퀀스 L0에 s를 집어넣는다. (start vertax)
+집어넣는 동시에 visited로 바꿈.
+i=0으로 세팅후
+반복문을 돌린다.
+
+...
+
+수도코드보다 예제를 보면서 설명하는게 편하다
+
+
+p.4
+
+DFS에서는
+한번 처리된 정점으로 돌아가는 간선을 back edge라고 했는데,
+BFS는 cross edge라고 한다. (사실 큰 의미는 없음)
+
+역시나 알파벳을 임의로 부여해주고, 알파벳이 빠른순서대로 우연히 뽑혔다고 가정한다. 편의를 위해.
+
+L0에 A를 집어넣음. 물론 visited시키고나서.
+L1 준비.
+A에 대해서 incident edges 준비.
+각각 edge에 대해 반대편 정점을 확인한다. (반복문)
+첫번째 AB edge. unexplored이네? 반대편 정점 B확인. ->unexplored이므로 visited시키면서 L1에 넣음
+A-B를 연결한 edge도 discovery로 바꿈.
+두번째 edge리턴(AC)
+AC unexplored네? C를보자. C도 unexplored네 -> C visit시키고 L1 시퀀스에 넣는다.
+세번째 edge AD리턴.
+역시 마찬가지.
+-> L1에 3가지 정점이 들어간다.
+
+그다음 L2를 준비.
+L2의 정점 하나하나에 대해, 위와 똑같은 작업 실행.
+begin 정점은 B므로 B부터 시작.
+B의 incident edge 시작.
+첫번째 BA. edge가 discovery이므로 넘김
+두번째 BC. edge가 unexplored인데 C가 visited이므로, edge BC를 cross상태로 바꿈. (dfs의 back과 같은 개념.)
+세번째 BE. edge도 unexplored, 반대편정점 E도 unexplored.
+edge discovey로 바꾸고 E visited로.
+
+L1의 두번째 정점 C에 대해서 시작.
+CA edge부터 ......
+
+...
+
+다시 p.3으로 돌아와서 수도코드 이해.
+
+
+한가지궁금한점.
+왜 L0, L1, L2 이런것들이 있을까? 사실은 없어도되는데..? 0, 1, 2의 의미?
+---> p.2에서, 최소 간선개수를 찾아낼 수 있다, 부분.
+즉 L0에서 Li까지 도착하는데 거치는 간선개수는 최소 i개이다.
+
+Li에서 Lj까지가는데의 최단경로는 j-i개. (j>i)
+
+
++) 많은 다른 책에서는, L0, L1, L2 ..의 리스트를 하나의 리스트에 담는 경우도 있다.
+하나의 리스트에, 먼저 A를담고 A에게 0이라고 쓰고, A와 관련된 정점들을 A뒤에 담고 A를 버린다.
+B,C,D에 1이라고 쓰고 역시 B와 관련된 정점들을 뒤에 넣고 B삭제. C도.... 쭈욱
+모든 정점이 처리된다면 최종적으로 시퀀스가 비게 될것.
+-> 이 시퀀스는, Queue이다.
+따라서 BFS는 Queue를 이용한다~~ 라는 사실.
+물론 지금까지 Queue보다 상위개념으로 설명했으니까 그러려니했는데, 그 시퀀스를 좀더 specific하게 말하면 queue였다~.
+
+정점들을 차례대로 처리하면되고, 새로 발견되는 정점들은 뒤에 넣으면 되기때문에.
+(스샷그림)
+
+시퀀스가 최종적으로 다 비웠는데, 아직 처리되지 않는 정점이 있다면 다른 connected component가 있다는 뜻이겠다.
+
+
+p.7
+특성들.
+1. s라는 정점이 들어간 connected component를 Gs라고 하면,
+BFS(G,s)를 하면 모든 정점, 간선을 방문한다. 당연. 방금했짜나.
+
+2. discovery edges만 모아놓은것은 spanning tree가 된다.
+cycle이 될 수없는 이유는, cross edge로 처리했기때문. 
+
+3. Li에 있는 각 정점들은,
+s부터 v까지의 path는 최소한 i개의 edge를 거쳐야 갈 수 있다. (아까말한 최단경로)
+
+
+p.8
+분석.
+만약에 adjacent list로 구현을 해놓고,
+O(1)에 visit을 처리할 수 있다면,
+
+각 정점들에 대해 초기화하는데 O(n)
+언젠가 모두 visited 되는데 O(n)
+
+엣지도 마찬가지로 O(m), O(m)
+다르게 말하면
+각 간선마다 O(1)시간이걸리고
+정점은 incidentEdges로 간선들을 호출하니까,
+각 정점에 대해서 O(deg(v))시간.
+-> O(deg(v))를 모든 정점에 대해 다 더하면 2m.  (O(m))
+
+=>BFS 는 O(n+m), total 선형시간이 걸린다.
+
+
+p.9
+응용
+같은얘기들.
+
+그중에도 4번째 특성은 다시.
+edge들의 cost들이 전부 동일하다고 가정했을때, (또는 간선의 개수만 중요하다고 할때.)
+최소비용으로 두 정점을 잇는 path를 찾는 문제에 적용할 수 있다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
